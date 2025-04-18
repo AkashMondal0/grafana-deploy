@@ -1,17 +1,20 @@
-FROM grafana/grafana:latest
+# Use the official Loki image
+FROM grafana/loki:latest
 
-# Copy provisioning config and dashboard
-COPY dashboards/ /etc/grafana/dashboards/
-COPY provisioning/ /etc/grafana/provisioning/
+# Expose the Loki port
+EXPOSE 3100
 
-# Expose Grafana's default port
-EXPOSE 3000
+# Set the working directory
+WORKDIR /etc/loki
 
-# Ensure the data directory exists and mount it as a volume
-VOLUME ["/var/lib/grafana"]
+# Copy the Loki configuration file
+COPY loki-config.yaml /etc/loki/loki-config.yaml
 
-# Mount a volume for dashboards
-VOLUME ["/etc/grafana/dashboards"]
+# Create the loki-data folder and set permissions
+RUN mkdir -p /loki-data && chown -R loki:loki /loki-data
 
-# Switch to a non-root user for security
-USER grafana
+# Define a volume for persistent data storage
+VOLUME ["/loki-data"]
+
+# Set the command to run Loki with the configuration file
+CMD ["-config.file=/etc/loki/loki-config.yaml", "-storage.local.path=/loki-data"]
