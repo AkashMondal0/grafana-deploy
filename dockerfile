@@ -11,7 +11,9 @@ WORKDIR /etc/loki
 COPY loki-config.yaml /etc/loki/loki-config.yaml
 
 # Create the loki-data folder and set permissions
+USER root
 RUN mkdir -p /loki-data && chown -R loki:loki /loki-data
+USER loki
 
 # Define a volume for persistent data storage
 VOLUME ["/loki-data"]
