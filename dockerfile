@@ -19,4 +19,4 @@ USER loki
 VOLUME ["/loki-data"]
 
 # Set the command to run Loki with the configuration file
-CMD ["-config.file=/etc/loki/loki-config.yaml"]
+CMD ["-config.file=/etc/loki/loki-config.yaml", "-config.expand-env=true"]
